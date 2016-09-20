@@ -33,6 +33,9 @@ public final class ConcreteActorSystem extends AbsActorSystem {
 	* Pre-condition: The mode:ActorMode is defined.
 	* Post-condition: If mode == ActorMode.LOCAL the method returns a new LocalActorRef() object; otherwise the method
 	* 				  throws an IllegalArgumentException object.
+	* 
+	* @param mode: ActorMode. An Actor can be of two types: LOCAL or REMOTE. 
+	*				          The mode defines dynamic actor creation based on the type. 
 	* */
 	@Override
 	protected ActorRef createActorReference(ActorMode mode) throws IllegalArgumentException {

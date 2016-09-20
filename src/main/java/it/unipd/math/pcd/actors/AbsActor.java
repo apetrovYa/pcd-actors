@@ -46,9 +46,13 @@ public abstract class AbsActor<T extends Message> implements Actor<T>, Runnable 
     * limited only internally to the OuterClass.
     * */
     static private class TextMessagePair<T extends Message> {
-        private T message;
-        private ActorRef<T> ref;
+        private final T message;
+        private final ActorRef<T> ref;
 
+        /*
+        * @param message: T. This field specs the message payload.
+        * @param ref: ActorRef<T>. The ref field specs who is the message receiver.
+        */
         public TextMessagePair(T message, ActorRef<T> ref) {
             this.message = message;
             this.ref = ref;
@@ -63,7 +67,12 @@ public abstract class AbsActor<T extends Message> implements Actor<T>, Runnable 
         }
     }
 
-
+    /*
+    * The class contains four internal fields. These have the responsibility to manage the specified 
+    * contract. Messages and the stopping actor's behavior. Self and sender fields are the addresses
+    * by which we can reference the requested characters into our system.
+    *
+    **/
     private boolean isStopped = false;
     private final ConcurrentLinkedQueue<TextMessagePair<T>> mailBox = new ConcurrentLinkedQueue<>();
     protected ActorRef<T> self;
@@ -108,22 +117,22 @@ public abstract class AbsActor<T extends Message> implements Actor<T>, Runnable 
     public void run( ) {
         boolean stoppingActor = false;
         while(stoppingActor == false) {
+            
             TextMessagePair<T> messageToExecute;
+            
             synchronized (mailBox)  {
+                
                 while ( mailBox.isEmpty() ) {
                     stoppingActor = (isStopped) ? true : false;
-                    try {
-                        mailBox.wait();
-                    }
-                    catch (InterruptedException interruptedException) {
-                        return;
-                    }
-                }
+                    
+                    try { mailBox.wait(); }
+                    catch (InterruptedException interruptedException) { return; }
+                }// end the isEmptyWhile 
             }// end sync
 
             messageToExecute = mailBox.poll();
             receive(messageToExecute.getKey());
-        }
+        }// end the external while.
     }// end run()
 
 }
