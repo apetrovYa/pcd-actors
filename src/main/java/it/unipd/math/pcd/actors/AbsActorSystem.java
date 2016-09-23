@@ -73,7 +73,7 @@ import java.util.concurrent.ExecutorService;
 *   </dl>
 * */
 public abstract class AbsActorSystem implements ActorSystem {
-	private final int nThreads = Runtime.getRuntime().availableProcessors();
+    private final int nThreads = Runtime.getRuntime().availableProcessors();
     protected final Map<ActorRef<?>, Actor<?>> actors = new ConcurrentHashMap<>();
     protected final ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
 
@@ -106,10 +106,8 @@ public abstract class AbsActorSystem implements ActorSystem {
     *                   the method stops the given actor and removes it from the registry of actors
     * */
     public void stop(ActorRef actor) {
-        if (actor != null) {
             getActor(actor).stop();
             actors.remove(actor);
-        }
     }
     
     /*
@@ -119,10 +117,8 @@ public abstract class AbsActorSystem implements ActorSystem {
     *                   will be stopped.
     * */
     public void stop() {
-        if (actors != null) {
-            for (ActorRef a : actors.keySet())
+        for (ActorRef a : actors.keySet())
                 stop(a);
-        }
     }
 
     /*
@@ -133,7 +129,7 @@ public abstract class AbsActorSystem implements ActorSystem {
     *                   a valid actor reference. Otherwise the method throws an Exception===NoSuchActorException
     * */
     protected AbsActor getActor(ActorRef actorRef) throws NoSuchActorException {
-        if (actorRef != null && actors.containsKey(actorRef))
+        if (actors.containsKey(actorRef))
                 return (AbsActor) actors.get(actorRef);
         throw new NoSuchActorException();
     }
